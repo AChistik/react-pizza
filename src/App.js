@@ -1,8 +1,8 @@
-import '../src/scss/app.scss'
-import Header from './components/header/Header';
-import CategoryList from './components/categoryList/CategoryList';
-import SortList from './components/sortList/SortList';
-import MenuList from './components/menuList/MenuList';
+import '../src/scss/app.scss';
+import Header from './components/Header';
+import CategoryList from './components/CategoryList';
+import SortList from './components/SortList';
+import MenuList from './components/MenuList';
 
 function App() {
   return (
