@@ -1,10 +1,23 @@
 import PizzaBlock from './PizzaBlock';
-import pizzas from '../assets/pizzas.json';
+import Skeleton from './PizzaBlock/Skeleton';
+import { useEffect, useState } from 'react';
 
 function MenuList() {
-  return (
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    fetch('https://62e6600ade23e263792b463f.mockapi.io/items')
+      .then((res) => {
+        return res.json();
+      })
+      .then((json) => setItems(json));
+  }, []);
+
+  return items.length <= 0 ? (
+    <Skeleton />
+  ) : (
     <div className="content__items">
-      {pizzas
+      {items
         .sort((a, b) => a.rating - b.rating)
         .map((obj) => {
           return <PizzaBlock {...obj} key={obj.id} />;

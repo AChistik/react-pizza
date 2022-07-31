@@ -5,6 +5,8 @@ import SortList from './components/SortList';
 import MenuList from './components/MenuList';
 
 function App() {
+  // https://62e6600ade23e263792b463f.mockapi.io/items
+
   return (
     <div className="wrapper">
       <Header />
