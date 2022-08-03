@@ -15,6 +15,7 @@ function MenuList() {
         setItems(json);
         setIsLoading(false);
       });
+    window.scrollTo(0, 0);
   }, []);
 
   return (
