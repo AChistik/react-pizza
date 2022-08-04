@@ -1,16 +1,23 @@
 import { useState } from 'react';
 
-function SortList() {
+function SortList({ onSelectSortType, sortType }) {
   const [isVisible, setIsVisible] = useState(false);
-  const [category, setCategory] = useState('популярности');
 
-  const categotyList = ['популярности', 'цене', 'алфавиту'];
+  const categotyList = [
+    { name: 'популярности 🠗', sortProperty: 'rating' },
+    { name: 'популярности 🠕', sortProperty: '-rating' },
+    { name: 'цене 🠗', sortProperty: 'price' },
+    { name: 'цене 🠕', sortProperty: '-price' },
+    { name: 'алфавиту 🠗', sortProperty: 'title' },
+    { name: 'алфавиту 🠕', sortProperty: '-title' },
+  ];
+
   const onVisible = () => {
     setIsVisible((isVisible) => !isVisible);
   };
 
   const onCategory = (categoryName) => {
-    setCategory(categoryName);
+    onSelectSortType(categoryName);
     onVisible();
   };
 
@@ -29,18 +36,18 @@ function SortList() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={onVisible}>{category}</span>
+        <span onClick={onVisible}>{sortType.name}</span>
       </div>
       {isVisible && (
         <div className="sort__popup">
           <ul>
-            {categotyList.map((name, i) => {
+            {categotyList.map((obj, i) => {
               return (
                 <li
-                  className={category === name ? `active` : null}
-                  onClick={() => onCategory(name)}
+                  className={sortType === obj ? `active` : null}
+                  onClick={() => onCategory(obj)}
                   key={i}>
-                  {name}
+                  {obj.name}
                 </li>
               );
             })}
