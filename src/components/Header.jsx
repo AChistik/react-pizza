@@ -1,6 +1,7 @@
 import logoSVG from '../assets/img/pizza-logo.svg';
+import Search from './Search';
 import { Link } from 'react-router-dom';
-function Header() {
+function Header({ searchWord, onChangeSearchWord }) {
   return (
     <div className="header">
       <div className="container">
@@ -13,7 +14,7 @@ function Header() {
             </div>
           </div>
         </Link>
-
+        <Search searchWord={searchWord} onChangeSearchWord={onChangeSearchWord} />
         <div className="header__cart">
           <Link to="/cart" className="button button--cart">
             <span>520 ₽</span>

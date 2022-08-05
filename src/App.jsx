@@ -5,15 +5,19 @@ import { Routes, Route } from 'react-router-dom';
 import NotFound from './pages/NotFound';
 import Cart from './pages/Cart';
 
-function App() {
-  // https://62e6600ade23e263792b463f.mockapi.io/items
+import { useState } from 'react';
 
+function App() {
+  const [searchWord, setSearchWord] = useState('');
+  function onChangeSearchWord(word) {
+    setSearchWord(word);
+  }
   return (
     <div className="wrapper">
-      <Header />
+      <Header searchWord={searchWord} onChangeSearchWord={onChangeSearchWord} />
       <div className="content">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home searchWord={searchWord} />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

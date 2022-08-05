@@ -5,14 +5,16 @@ import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 
 import { useEffect, useState } from 'react';
+import Pagination from '../components/Pagination';
 
-function Home() {
+function Home({ searchWord }) {
   const [categoryId, setCategoryId] = useState(0);
   const [sortType, setSortType] = useState({
     name: 'популярности 🠗',
     sortProperty: 'rating',
   });
   const [items, setItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -21,11 +23,12 @@ function Home() {
   useEffect(() => {
     setIsLoading(true);
     fetch(
-      `https://62e6600ade23e263792b463f.mockapi.io/items?${
+      `https://62e6600ade23e263792b463f.mockapi.io/items?page=${currentPage}&limit=4&${
         categoryId > 0 ? `category=${categoryId}` : ``
-      }&sortBy=${sortType.sortProperty.replace('-', '')}&order=${
-        sortType.sortProperty.includes('-') ? `desc` : `asc`
-      }`,
+      }${searchWord ? `&search=${searchWord}` : ``}&sortBy=${sortType.sortProperty.replace(
+        '-',
+        '',
+      )}&order=${sortType.sortProperty.includes('-') ? `desc` : `asc`}`,
     )
       .then((res) => {
         return res.json();
@@ -34,7 +37,7 @@ function Home() {
         setItems(json);
         setIsLoading(false);
       });
-  }, [categoryId, sortType]);
+  }, [categoryId, sortType, searchWord, currentPage]);
 
   function onSelectCategory(category) {
     setCategoryId(category);
@@ -44,6 +47,14 @@ function Home() {
     setSortType(sort);
   }
 
+  const pizzas = items
+    // .filter((obj) => obj.title.toLowerCase().includes(searchWord.toLowerCase())) Сортировка на стороне js
+    .map((obj) => {
+      return <PizzaBlock {...obj} key={obj.id} />;
+    });
+
+  const skeletons = [...new Array(8)].map((item, i) => <Skeleton key={i} />);
+
   return (
     <div className="container">
       <div className="content__top">
@@ -51,13 +62,8 @@ function Home() {
         <SortList onSelectSortType={onSelectSortType} sortType={sortType} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">
-        {isLoading
-          ? [...new Array(8)].map((item, i) => <Skeleton key={i} />)
-          : items.map((obj) => {
-              return isLoading ? <Skeleton /> : <PizzaBlock {...obj} key={obj.id} />;
-            })}
-      </div>
+      <div className="content__items">{isLoading ? skeletons : pizzas}</div>
+      <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </div>
   );
 }
