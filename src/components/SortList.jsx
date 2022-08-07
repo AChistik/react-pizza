@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSortType } from '../redux/slices/filterSlice';
+function SortList() {
+  const sortType = useSelector((state) => state.filter.sort);
+  const dispatch = useDispatch();
 
-function SortList({ onSelectSortType, sortType }) {
   const [isVisible, setIsVisible] = useState(false);
-
   const categotyList = [
     { name: 'популярности 🠗', sortProperty: 'rating' },
     { name: 'популярности 🠕', sortProperty: '-rating' },
@@ -16,8 +19,8 @@ function SortList({ onSelectSortType, sortType }) {
     setIsVisible((isVisible) => !isVisible);
   };
 
-  const onCategory = (categoryName) => {
-    onSelectSortType(categoryName);
+  const onChangeCategory = (categoryObj) => {
+    dispatch(setSortType(categoryObj));
     onVisible();
   };
 
@@ -45,7 +48,7 @@ function SortList({ onSelectSortType, sortType }) {
               return (
                 <li
                   className={sortType === obj ? `active` : null}
-                  onClick={() => onCategory(obj)}
+                  onClick={() => onChangeCategory(obj)}
                   key={i}>
                   {obj.name}
                 </li>

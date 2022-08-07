@@ -3,55 +3,50 @@ import CategoryList from '../components/CategoryList';
 import SortList from '../components/SortList';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
-
-import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCategoryId } from '../redux/slices/filterSlice';
+import { useEffect, useState, useContext } from 'react';
 import Pagination from '../components/Pagination';
+import { SearchContext } from '../App';
 
-function Home({ searchWord }) {
-  const [categoryId, setCategoryId] = useState(0);
-  const [sortType, setSortType] = useState({
-    name: 'популярности 🠗',
-    sortProperty: 'rating',
-  });
+function Home() {
+  const { categoryId, sort } = useSelector((state) => state.filter);
+  const dispatch = useDispatch();
+
   const [items, setItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const { searchWord } = useContext(SearchContext);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
   useEffect(() => {
     setIsLoading(true);
-    fetch(
-      `https://62e6600ade23e263792b463f.mockapi.io/items?page=${currentPage}&limit=4&${
-        categoryId > 0 ? `category=${categoryId}` : ``
-      }${searchWord ? `&search=${searchWord}` : ``}&sortBy=${sortType.sortProperty.replace(
-        '-',
-        '',
-      )}&order=${sortType.sortProperty.includes('-') ? `desc` : `asc`}`,
-    )
+    axios
+      .get(
+        `https://62e6600ade23e263792b463f.mockapi.io/items?page=${currentPage}&limit=4&${
+          categoryId > 0 ? `category=${categoryId}` : ``
+        }${searchWord ? `&search=${searchWord}` : ``}&sortBy=${sort.sortProperty.replace(
+          '-',
+          '',
+        )}&order=${sort.sortProperty.includes('-') ? `desc` : `asc`}`,
+      )
       .then((res) => {
-        return res.json();
-      })
-      .then((json) => {
-        setItems(json);
+        setItems(res.data);
         setIsLoading(false);
       });
-  }, [categoryId, sortType, searchWord, currentPage]);
+  }, [categoryId, sort, searchWord, currentPage]);
 
   function onSelectCategory(category) {
-    setCategoryId(category);
+    dispatch(setCategoryId(category));
   }
 
-  function onSelectSortType(sort) {
-    setSortType(sort);
-  }
-
-  const pizzas = items
-    // .filter((obj) => obj.title.toLowerCase().includes(searchWord.toLowerCase())) Сортировка на стороне js
-    .map((obj) => {
-      return <PizzaBlock {...obj} key={obj.id} />;
-    });
+  const pizzas = items.map((obj) => {
+    return <PizzaBlock {...obj} key={obj.id} />;
+  });
 
   const skeletons = [...new Array(8)].map((item, i) => <Skeleton key={i} />);
 
@@ -59,7 +54,7 @@ function Home({ searchWord }) {
     <div className="container">
       <div className="content__top">
         <CategoryList onSelectCategory={onSelectCategory} activeCategory={categoryId} />
-        <SortList onSelectSortType={onSelectSortType} sortType={sortType} />
+        <SortList />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{isLoading ? skeletons : pizzas}</div>

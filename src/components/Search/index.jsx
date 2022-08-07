@@ -1,8 +1,8 @@
-import React from 'react';
-
 import style from './Search.module.scss';
-
-const Search = ({ searchWord, onChangeSearchWord }) => {
+import { useContext } from 'react';
+import { SearchContext } from '../../App';
+const Search = () => {
+  const { searchWord, setSearchWord } = useContext(SearchContext);
   return (
     <div className={style.search}>
       <svg
@@ -19,14 +19,14 @@ const Search = ({ searchWord, onChangeSearchWord }) => {
       <input
         type="text"
         value={searchWord}
-        onChange={(e) => onChangeSearchWord(e.target.value)}
+        onChange={(e) => setSearchWord(e.target.value)}
         className={style.input}
         placeholder="Поиск..."
       />
       {searchWord && (
         <svg
           className={style.clear}
-          onClick={() => onChangeSearchWord('')}
+          onClick={() => setSearchWord('')}
           width="17px"
           height="17px"
           viewBox="0 0 17 17">
