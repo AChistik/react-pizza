@@ -1,19 +1,21 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSortType } from '../redux/slices/filterSlice';
+
+export const categotyList = [
+  { name: 'популярности 🠗', sortProperty: 'rating' },
+  { name: 'популярности 🠕', sortProperty: '-rating' },
+  { name: 'цене 🠗', sortProperty: 'price' },
+  { name: 'цене 🠕', sortProperty: '-price' },
+  { name: 'алфавиту 🠗', sortProperty: 'title' },
+  { name: 'алфавиту 🠕', sortProperty: '-title' },
+];
+
 function SortList() {
   const sortType = useSelector((state) => state.filter.sort);
   const dispatch = useDispatch();
 
   const [isVisible, setIsVisible] = useState(false);
-  const categotyList = [
-    { name: 'популярности 🠗', sortProperty: 'rating' },
-    { name: 'популярности 🠕', sortProperty: '-rating' },
-    { name: 'цене 🠗', sortProperty: 'price' },
-    { name: 'цене 🠕', sortProperty: '-price' },
-    { name: 'алфавиту 🠗', sortProperty: 'title' },
-    { name: 'алфавиту 🠕', sortProperty: '-title' },
-  ];
 
   const onVisible = () => {
     setIsVisible((isVisible) => !isVisible);
