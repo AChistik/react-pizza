@@ -7,6 +7,7 @@ import Pagination from '../components/Pagination';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCategoryId, setFiltres } from '../redux/slices/filterSlice';
+import { setItems } from '../redux/slices/pizzasSlice';
 import { useNavigate } from 'react-router-dom';
 import { categotyList } from '../components/SortList';
 import { SearchContext } from '../App';
@@ -14,30 +15,35 @@ import qs from 'qs';
 
 function Home() {
   const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
+  const items = useSelector((state) => state.pizzas.items);
+
   const isSearch = useRef(false);
   const isMounted = useRef(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { searchWord } = useContext(SearchContext);
 
-  const fetchPizzas = () => {
+  const fetchPizzas = async () => {
     setIsLoading(true);
-    axios
-      .get(
-        `https://62e6600ade23e263792b463f.mockapi.io/items?page=${currentPage}&limit=4&${
-          categoryId > 0 ? `category=${categoryId}` : ``
-        }${searchWord ? `&search=${searchWord}` : ``}&sortBy=${sort.sortProperty.replace(
-          '-',
-          '',
-        )}&order=${sort.sortProperty.includes('-') ? `desc` : `asc`}`,
-      )
-      .then((res) => {
-        setItems(res.data);
-        setIsLoading(false);
-      });
+
+    const category = categoryId > 0 ? `category=${categoryId}` : ``;
+    const search = searchWord ? `&search=${searchWord}` : ``;
+    const sortBy = sort.sortProperty.replace('-', '');
+    const sortOrder = sort.sortProperty.includes('-') ? `desc` : `asc`;
+    try {
+      const { data } = await axios.get(
+        `https://62e6600ade23e263792b463f.mockapi.io/items?page=${currentPage}&limit=4&${category}${search}&sortBy=${sortBy}&order=${sortOrder}`,
+      );
+      dispatch(setItems(data));
+    } catch (error) {
+      alert('Ошибка при получении пицц');
+      console.log('ERROR', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
