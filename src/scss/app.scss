@@ -57,6 +57,16 @@ body {
       flex-direction: column-reverse;
     }
   }
+
+  &__error__info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 20px;
+    align-items: center;
+    text-align: center;
+    line-height: 48px;
+  }
 }
 
 .container {
