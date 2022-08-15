@@ -2,8 +2,9 @@ import logoSVG from '../assets/img/pizza-logo.svg';
 import Search from './Search';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { selectCart } from '../redux/slices/cartSlice';
 function Header({ searchWord, onChangeSearchWord }) {
-  const { totalPrice, items } = useSelector((state) => state.cart);
+  const { totalPrice, items } = useSelector(selectCart);
   return (
     <div className="header">
       <div className="container">

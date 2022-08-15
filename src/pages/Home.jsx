@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useContext } from 'react';
+import { useRef, useEffect } from 'react';
 import CategoryList from '../components/CategoryList';
 import SortList from '../components/SortList';
 import PizzaBlock from '../components/PizzaBlock';
@@ -9,24 +9,20 @@ import { setCategoryId, setFiltres } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzasSlice';
 import { useNavigate } from 'react-router-dom';
 import { categotyList } from '../components/SortList';
-import { SearchContext } from '../App';
 import qs from 'qs';
 
 function Home() {
-  const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
+  const { categoryId, sort, currentPage, searchValue } = useSelector((state) => state.filter);
   const { items, status } = useSelector((state) => state.pizzas);
-
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { searchWord } = useContext(SearchContext);
-
   const getPizzas = async () => {
     const category = categoryId > 0 ? `category=${categoryId}` : ``;
-    const search = searchWord ? `&search=${searchWord}` : ``;
+    const search = searchValue ? `&search=${searchValue}` : ``;
     const sortBy = sort.sortProperty.replace('-', '');
     const sortOrder = sort.sortProperty.includes('-') ? `desc` : `asc`;
 
@@ -73,7 +69,7 @@ function Home() {
       navigate(`?${queryString}`);
     }
     isMounted.current = true;
-  }, [categoryId, sort, searchWord, currentPage]);
+  }, [categoryId, sort, searchValue, currentPage]);
 
   function onSelectCategory(category) {
     dispatch(setCategoryId(category));
