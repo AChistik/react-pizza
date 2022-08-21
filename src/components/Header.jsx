@@ -3,7 +3,7 @@ import Search from './Search';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { selectCart } from '../redux/slices/cartSlice';
-function Header({ searchWord, onChangeSearchWord }) {
+function Header() {
   const { totalPrice, items } = useSelector(selectCart);
 
   const { pathname } = useLocation();
@@ -20,7 +20,7 @@ function Header({ searchWord, onChangeSearchWord }) {
             </div>
           </div>
         </Link>
-        <Search searchWord={searchWord} onChangeSearchWord={onChangeSearchWord} />
+        <Search />
         {pathname === '/cart' ? null : (
           <div className="header__cart">
             <Link to="/cart" className="button button--cart">

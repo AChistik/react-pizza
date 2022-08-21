@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const FullPizza = () => {
-  const [pizza, setPizza] = useState();
+  const [pizza, setPizza] = useState<{
+    imageUrl: string;
+    title: string;
+    price: number;
+  }>();
   const { id } = useParams();
 
   useEffect(() => {
@@ -17,7 +21,7 @@ const FullPizza = () => {
     }
     fetchPizzas();
   }, []);
-  console.log(pizza);
+
   if (!pizza) {
     return (
       <div className="container">
