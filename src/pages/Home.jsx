@@ -7,7 +7,7 @@ import Pagination from '../components/Pagination';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCategoryId, setFiltres } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzasSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { categotyList } from '../components/SortList';
 import qs from 'qs';
 
@@ -76,7 +76,11 @@ function Home() {
   }
 
   const pizzas = items.map((obj) => {
-    return <PizzaBlock {...obj} key={obj.id} />;
+    return (
+      <Link to={`/pizza/${obj.id}`} key={obj.id}>
+        <PizzaBlock {...obj} />
+      </Link>
+    );
   });
 
   const skeletons = [...new Array(8)].map((item, i) => <Skeleton key={i} />);
