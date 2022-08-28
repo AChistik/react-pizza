@@ -3,16 +3,20 @@ import { useState, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux/es/exports';
 import debounce from 'lodash.debounce';
 import { setSearchValue } from '../../redux/slices/filterSlice';
-const Search = () => {
+import { RootState } from '../../redux/store';
+const Search: React.FC = () => {
   const [searchWords, setSearchWords] = useState('');
-  const { searchValue } = useSelector((state) => state.filter);
+  const { searchValue } = useSelector((state: RootState) => state.filter);
   const dispatch = useDispatch();
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const onClickClear = () => {
     dispatch(setSearchValue(''));
     setSearchWords('');
-    inputRef.current.focus();
+    // if (inputRef.current) {
+    //   inputRef.current.focus();
+    // }
+    inputRef.current?.focus();
   };
 
   const updateSearchValue = useCallback(
@@ -22,7 +26,7 @@ const Search = () => {
     [],
   );
 
-  const onChangeInput = (e) => {
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWords(e.target.value);
     updateSearchValue(e.target.value);
   };

@@ -3,10 +3,14 @@ import Search from './Search';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { selectCart } from '../redux/slices/cartSlice';
-function Header() {
+const Header: React.FC = () => {
   const { totalPrice, items } = useSelector(selectCart);
 
   const { pathname } = useLocation();
+
+  const totalCount = items.reduce((sum: number, obj: any) => {
+    return obj.count + sum;
+  }, 0);
 
   return (
     <div className="header">
@@ -54,21 +58,13 @@ function Header() {
                   strokeLinejoin="round"
                 />
               </svg>
-              <span>
-                {items.reduce((sum, obj) => {
-                  return obj.count + sum;
-                }, 0) < 1
-                  ? null
-                  : items.reduce((sum, obj) => {
-                      return obj.count + sum;
-                    }, 0)}
-              </span>
+              <span>{totalCount < 1 ? null : totalCount}</span>
             </Link>
           </div>
         )}
       </div>
     </div>
   );
-}
+};
 
 export default Header;

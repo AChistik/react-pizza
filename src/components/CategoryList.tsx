@@ -1,6 +1,10 @@
-function CategoryList({ onSelectCategory, activeCategory }) {
-  const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
+type CategoryesProps = {
+  onSelectCategory: (index: number) => void;
+  activeCategory: number;
+};
+const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
 
+const CategoryList: React.FC<CategoryesProps> = ({ onSelectCategory, activeCategory }) => {
   return (
     <div className="categories">
       <ul>
@@ -17,6 +21,6 @@ function CategoryList({ onSelectCategory, activeCategory }) {
       </ul>
     </div>
   );
-}
+};
 
 export default CategoryList;

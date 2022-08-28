@@ -1,8 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSortType } from '../redux/slices/filterSlice';
+import { RootState } from '../redux/store';
+import { SortType } from '../redux/slices/filterSlice';
+// type SortItem = {
+//   name: string;
+//   sortProperty: 'rating' | 'title' | 'price' | '-rating' | '-title' | '-price';
+// };
 
-export const categotyList = [
+export const categotyList: SortType[] = [
   { name: 'популярности 🠗', sortProperty: 'rating' },
   { name: 'популярности 🠕', sortProperty: '-rating' },
   { name: 'цене 🠗', sortProperty: 'price' },
@@ -11,27 +17,29 @@ export const categotyList = [
   { name: 'алфавиту 🠕', sortProperty: '-title' },
 ];
 
-function SortList() {
-  const sortType = useSelector((state) => state.filter.sort);
+const SortList: React.FC = () => {
+  const sortType = useSelector((state: RootState) => state.filter.sort);
   const dispatch = useDispatch();
 
   const [isVisible, setIsVisible] = useState(false);
 
-  const sortRef = useRef();
+  const sortRef = useRef<HTMLDivElement>(null);
 
   const onVisible = () => {
     setIsVisible((isVisible) => !isVisible);
   };
 
-  const onChangeCategory = (categoryObj) => {
+  const onChangeCategory = (categoryObj: SortType) => {
     dispatch(setSortType(categoryObj));
     onVisible();
   };
 
   useEffect(() => {
-    const handleKlickOnsite = (event) => {
-      if (!event.composedPath().includes(sortRef.current)) {
-        setIsVisible(false);
+    const handleKlickOnsite = (event: MouseEvent) => {
+      if (sortRef.current) {
+        if (!event.composedPath().includes(sortRef.current)) {
+          setIsVisible(false);
+        }
       }
     };
     document.body.addEventListener('click', handleKlickOnsite);
@@ -63,7 +71,7 @@ function SortList() {
             {categotyList.map((obj, i) => {
               return (
                 <li
-                  className={sortType === obj ? `active` : null}
+                  className={sortType === obj ? `active` : ''}
                   onClick={() => onChangeCategory(obj)}
                   key={i}>
                   {obj.name}
@@ -75,6 +83,6 @@ function SortList() {
       )}
     </div>
   );
-}
+};
 
 export default SortList;

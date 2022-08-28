@@ -1,9 +1,20 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addProduct } from '../../redux/slices/cartSlice';
+import { addProduct, CartItem } from '../../redux/slices/cartSlice';
+import { Link } from 'react-router-dom';
 
-const pizzaTypes = ['тонкое', 'традиционное'];
-function PizzaBlock({ id, imageUrl, price, sizes, title, types }) {
+const pizzaTypes: ['тонкое', 'традиционное'] = ['тонкое', 'традиционное'];
+
+type PizzaBlockProps = {
+  id: string;
+  imageUrl: string;
+  price: number;
+  sizes: number[];
+  title: string;
+  types: number[];
+};
+
+const PizzaBlock: React.FC<PizzaBlockProps> = ({ id, imageUrl, price, sizes, title, types }) => {
   const [pizzaCount, setPizzaCount] = useState(0);
   const [activeType, setActiveType] = useState(0);
   const [activeSize, setActiveSize] = useState(0);
@@ -11,24 +22,27 @@ function PizzaBlock({ id, imageUrl, price, sizes, title, types }) {
   const dispatch = useDispatch();
 
   const onAddPizza = () => {
-    dispatch(
-      addProduct({
-        id,
-        imageUrl,
-        price,
-        size: sizes[activeSize],
-        title,
-        type: pizzaTypes[activeType],
-      }),
-    );
+    const item: CartItem = {
+      id,
+      imageUrl,
+      price,
+      size: sizes[activeSize],
+      title,
+      type: pizzaTypes[activeType],
+      count: 0,
+    };
+    dispatch(addProduct(item));
     setPizzaCount((pizzaCount) => pizzaCount + 1);
   };
 
   return (
     <div className="pizza-block-wrapper">
       <div className="pizza-block">
-        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
-        <h4 className="pizza-block__title"> {title} </h4>
+        <Link to={`/pizza/${id}`}>
+          <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
+          <h4 className="pizza-block__title"> {title} </h4>
+        </Link>
+
         <div className="pizza-block__selector">
           <ul>
             {types.map((typeId) => (
@@ -73,6 +87,6 @@ function PizzaBlock({ id, imageUrl, price, sizes, title, types }) {
       </div>
     </div>
   );
-}
+};
 
 export default PizzaBlock;

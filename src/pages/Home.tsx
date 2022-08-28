@@ -1,24 +1,28 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import CategoryList from '../components/CategoryList';
 import SortList from '../components/SortList';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { setCategoryId, setFiltres } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzasSlice';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { categotyList } from '../components/SortList';
 import qs from 'qs';
+import { RootState, useAppDispatch } from '../redux/store';
+import { FilterSliceState } from '../redux/slices/filterSlice';
 
-function Home() {
-  const { categoryId, sort, currentPage, searchValue } = useSelector((state) => state.filter);
-  const { items, status } = useSelector((state) => state.pizzas);
+const Home: React.FC = () => {
+  const { categoryId, sort, currentPage, searchValue } = useSelector(
+    (state: RootState) => state.filter,
+  );
+  const { items, status } = useSelector((state: RootState) => state.pizzas);
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const getPizzas = async () => {
     const category = categoryId > 0 ? `category=${categoryId}` : ``;
@@ -32,7 +36,7 @@ function Home() {
         search,
         sortBy,
         sortOrder,
-        currentPage,
+        currentPage: String(currentPage),
       }),
     );
   };
@@ -40,15 +44,16 @@ function Home() {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
+      const params = qs.parse(window.location.search.substring(1)) as unknown as FilterSliceState;
 
-      const sort = categotyList.find((obj) => obj.sortProperty === params.sortProperty);
+      const sort = categotyList.find((obj) => obj.sortProperty === params.sort.sortProperty);
       dispatch(
         setFiltres({
           ...params,
-          sort,
+          sort: sort || categotyList[0],
         }),
       );
+
       isSearch.current = true;
     }
   }, []);
@@ -71,19 +76,14 @@ function Home() {
     isMounted.current = true;
   }, [categoryId, sort, searchValue, currentPage]);
 
-  function onSelectCategory(category) {
+  const onSelectCategory = useCallback((category: number) => {
     dispatch(setCategoryId(category));
-  }
-
-  const pizzas = items.map((obj) => {
-    return (
-      <Link to={`/pizza/${obj.id}`} key={obj.id}>
-        <PizzaBlock {...obj} />
-      </Link>
-    );
+  }, []);
+  const pizzas = items.map((obj: any) => {
+    return <PizzaBlock {...obj} key={obj.id} />;
   });
 
-  const skeletons = [...new Array(8)].map((item, i) => <Skeleton key={i} />);
+  const skeletons = [...new Array(4)].map((item, i) => <Skeleton key={i} />);
 
   return (
     <div className="container">
@@ -95,7 +95,7 @@ function Home() {
       {status === 'error' ? (
         <div className="content__error__info">
           <h2>
-            Возникла ошибка <icon>😕</icon>
+            Возникла ошибка <i>😕</i>
           </h2>
           <p>
             Вероятней всего, у нас что-то сломалось.
@@ -111,6 +111,6 @@ function Home() {
       )}
     </div>
   );
-}
+};
 
 export default Home;
