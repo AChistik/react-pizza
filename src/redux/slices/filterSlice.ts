@@ -9,6 +9,7 @@ export interface FilterSliceState {
   searchValue: string;
   categoryId: number;
   currentPage: number;
+  sortProperty?: string;
   sort: SortType;
 }
 

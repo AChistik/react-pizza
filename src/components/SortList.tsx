@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSortType } from '../redux/slices/filterSlice';
 import { RootState } from '../redux/store';
 import { SortType } from '../redux/slices/filterSlice';
+
 // type SortItem = {
 //   name: string;
 //   sortProperty: 'rating' | 'title' | 'price' | '-rating' | '-title' | '-price';
@@ -17,7 +18,7 @@ export const categotyList: SortType[] = [
   { name: 'алфавиту 🠕', sortProperty: '-title' },
 ];
 
-const SortList: React.FC = () => {
+const SortList: React.FC = memo(() => {
   const sortType = useSelector((state: RootState) => state.filter.sort);
   const dispatch = useDispatch();
 
@@ -83,6 +84,6 @@ const SortList: React.FC = () => {
       )}
     </div>
   );
-};
+});
 
 export default SortList;

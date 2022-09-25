@@ -45,8 +45,7 @@ const Home: React.FC = () => {
     window.scrollTo(0, 0);
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1)) as unknown as FilterSliceState;
-
-      const sort = categotyList.find((obj) => obj.sortProperty === params.sort.sortProperty);
+      const sort = categotyList.find((obj) => obj.sortProperty === params.sortProperty);
       dispatch(
         setFiltres({
           ...params,
@@ -79,6 +78,7 @@ const Home: React.FC = () => {
   const onSelectCategory = useCallback((category: number) => {
     dispatch(setCategoryId(category));
   }, []);
+
   const pizzas = items.map((obj: any) => {
     return <PizzaBlock {...obj} key={obj.id} />;
   });

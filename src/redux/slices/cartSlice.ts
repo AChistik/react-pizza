@@ -36,7 +36,7 @@ const cartSlice = createSlice({
       } else {
         state.items.push({
           ...action.payload,
-          count: 1,
+          // count: 1,
         });
       }
       state.totalPrice = state.items.reduce((sum, obj) => {

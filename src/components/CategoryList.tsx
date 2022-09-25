@@ -1,10 +1,12 @@
+import { memo } from 'react';
+
 type CategoryesProps = {
   onSelectCategory: (index: number) => void;
   activeCategory: number;
 };
 const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
 
-const CategoryList: React.FC<CategoryesProps> = ({ onSelectCategory, activeCategory }) => {
+const CategoryList: React.FC<CategoryesProps> = memo(({ onSelectCategory, activeCategory }) => {
   return (
     <div className="categories">
       <ul>
@@ -21,6 +23,6 @@ const CategoryList: React.FC<CategoryesProps> = ({ onSelectCategory, activeCateg
       </ul>
     </div>
   );
-};
+});
 
 export default CategoryList;
